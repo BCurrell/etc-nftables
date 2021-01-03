@@ -1,0 +1,52 @@
+#!/usr/sbin/nft -f
+
+# https://blog.samuel.domains/blog/security/nftables-hardening-rules-and-good-practices
+
+table netdev antiddos {}
+table inet antiddos {}
+
+flush table netdev antiddos
+flush table inet antiddos
+
+include "/etc/nftables/vars/bogons_v4.nft"
+#include "/etc/nftables/vars/bogons_v6.nft"
+
+table netdev antiddos {
+
+#	chain ingress{iface} {
+#		type filter hook ingress device {iface} priority -500;
+#
+#		jump ingress
+#	}
+
+	chain ingress {
+		# Drop fragmented packets
+		ip frag-off & 0x1fff != 0 counter drop
+
+		# Drop bogons
+		ip saddr $bogons_v4 counter drop
+#		ip6 saddr $bogons_v6 counter drop
+
+		# Drop TCP XMAS
+		tcp flags & (fin|syn|rst|psh|ack|urg) == fin|syn|rst|psh|ack|urg counter drop
+
+		# Drop TCP NULL
+		tcp flags & (fin|syn|rst|psh|ack|urg) == 0x0 counter drop
+
+		# Drop TCP MSS
+		tcp flags syn tcp option maxseg size 1-536 counter drop
+	}
+}
+
+table inet antiddos {
+
+	chain prerouting {
+		type filter hook prerouting priority -100;
+
+		# Drop CT invalid
+		ct state invalid counter drop
+
+		# Drop TCP != SYN and CT new
+		tcp flags & (fin|syn|rst|ack) != syn ct state new counter drop
+	}
+}

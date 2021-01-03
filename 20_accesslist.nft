@@ -1,0 +1,23 @@
+#!/usr/sbin/nft -f
+
+table inet accesslist {}
+
+flush table inet accesslist
+
+table inet accesslist {
+
+	chain input {
+		# type filter hook input priority 0; policy drop;
+		type filter hook input priority 0; policy accept;
+	}
+
+	chain forward {
+		# type filter hook forward priority 0; policy drop;
+		type filter hook forward priority 0; policy accept;
+	}
+
+	chain output {
+		# type filter hook output priority 0; policy drop;
+		type filter hook output priority 0; policy accept;
+	}
+}
