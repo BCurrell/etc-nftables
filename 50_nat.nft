@@ -1,0 +1,20 @@
+#!/usr/sbin/nft -f
+
+table inet nat {}
+
+flush table inet nat
+
+#define iface_wan = {  }
+
+table inet nat {
+
+	chain prerouting {
+		type nat hook prerouting priority -100; policy accept;
+	}
+
+	chain postrouting {
+		type nat hook postrouting priority 100; policy accept;
+
+#		oif $iface_wan masquerade comment "Masquerade WAN"
+	}
+}

@@ -14,7 +14,8 @@ include "/etc/nftables/vars/bogons_v4.nft"
 table netdev antiddos {
 
 #	chain ingress{iface} {
-#		type filter hook ingress device {iface} priority -500;
+#		# Priority needs to be before everything, earliest NF_IP_PRI_CONNTRACK_DEFRAG (-400)
+#		type filter hook ingress device {iface} priority -500; policy accept;
 #
 #		jump ingress
 #	}
@@ -41,7 +42,8 @@ table netdev antiddos {
 table inet antiddos {
 
 	chain prerouting {
-		type filter hook prerouting priority -100;
+		# Priority needs to be after NF_IP_PRI_CONNTRACK (-200)
+		type filter hook prerouting priority -190;
 
 		# Drop CT invalid
 		ct state invalid counter drop

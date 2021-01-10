@@ -9,15 +9,19 @@ table inet accesslist {
 	chain input {
 		# type filter hook input priority 0; policy drop;
 		type filter hook input priority 0; policy accept;
+
+		iif { lo } accept comment "Accept loopback"
+
+		meta l4proto {icmp, ipv6-icmp} accept comment "Accept ICMP"
+
+		ct state established,related accept comment "Accept traffic originated locally"
 	}
 
 	chain forward {
-		# type filter hook forward priority 0; policy drop;
-		type filter hook forward priority 0; policy accept;
+		type filter hook forward priority 0; policy drop;
 	}
 
 	chain output {
-		# type filter hook output priority 0; policy drop;
 		type filter hook output priority 0; policy accept;
 	}
 }
