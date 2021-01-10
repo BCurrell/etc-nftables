@@ -1,20 +1,36 @@
 #!/usr/sbin/nft -f
 
-table inet nat {}
+table ip nat {}
+table ip6 nat {}
 
-flush table inet nat
+flush table ip nat
+flush table ip6 nat
 
-#define iface_wan = {  }
+#define iface_wan_v4 = {  }
+#define iface_wan_v6 = {  }
 
-table inet nat {
+table ip nat {
 
 	chain prerouting {
-		type nat hook prerouting priority -100; policy accept;
+		type nat hook prerouting priority -100;
 	}
 
 	chain postrouting {
-		type nat hook postrouting priority 100; policy accept;
+		type nat hook postrouting priority 100;
 
-#		oif $iface_wan masquerade comment "Masquerade WAN"
+#		oif $iface_wan_v4 masquerade comment "Masquerade WAN"
+	}
+}
+
+table ip6 nat {
+
+	chain prerouting {
+		type nat hook prerouting priority -100;
+	}
+
+	chain postrouting {
+		type nat hook postrouting priority 100;
+
+#		oif $iface_wan_v6 masquerade comment "Masquerade WAN"
 	}
 }
