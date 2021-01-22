@@ -6,9 +6,6 @@ table ip6 nat {}
 flush table ip nat
 flush table ip6 nat
 
-#define iface_wan_v4 = {  }
-#define iface_wan_v6 = {  }
-
 table ip nat {
 
 	chain prerouting {

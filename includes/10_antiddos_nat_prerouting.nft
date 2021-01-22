@@ -1,0 +1,12 @@
+#!/usr/sbin/nft -f
+
+chain prerouting {
+	# Priority needs to be after NF_IP_PRI_CONNTRACK (-200)
+	type nat hook prerouting priority -190;
+
+	# Drop CT invalid
+	ct state invalid counter drop
+
+	# Drop TCP != SYN and CT new
+	tcp flags & (fin|syn|rst|ack) != syn ct state new counter drop
+}

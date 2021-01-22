@@ -7,8 +7,7 @@ flush table inet accesslist
 table inet accesslist {
 
 	chain input {
-		# type filter hook input priority 0; policy drop;
-		type filter hook input priority 0; policy accept;
+		type filter hook input priority 0; policy drop;
 
 		iif { lo } accept comment "Accept loopback"
 

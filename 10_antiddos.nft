@@ -3,22 +3,16 @@
 # https://blog.samuel.domains/blog/security/nftables-hardening-rules-and-good-practices
 
 table netdev antiddos {}
-table inet antiddos {}
+table ip antiddos {}
+table ip6 antiddos {}
 
 flush table netdev antiddos
-flush table inet antiddos
-
-include "/etc/nftables/vars/bogons_v4.nft"
-#include "/etc/nftables/vars/bogons_v6.nft"
+flush table ip antiddos
+flush table ip6 antiddos
 
 table netdev antiddos {
 
-#	chain ingress{iface} {
-#		# Priority needs to be before everything, earliest NF_IP_PRI_CONNTRACK_DEFRAG (-400)
-#		type filter hook ingress device {iface} priority -500; policy accept;
-#
-#		jump ingress
-#	}
+	include "/etc/nftables/includes/antiddos_ingress/*.nft"
 
 	chain ingress {
 		# Drop fragmented packets
@@ -39,16 +33,12 @@ table netdev antiddos {
 	}
 }
 
-table inet antiddos {
+table ip antiddos {
 
-	chain prerouting {
-		# Priority needs to be after NF_IP_PRI_CONNTRACK (-200)
-		type filter hook prerouting priority -190;
+	include "/etc/nftables/includes/10_antiddos_nat_prerouting.nft"
+}
 
-		# Drop CT invalid
-		ct state invalid counter drop
+table ip6 antiddos {
 
-		# Drop TCP != SYN and CT new
-		tcp flags & (fin|syn|rst|ack) != syn ct state new counter drop
-	}
+	include "/etc/nftables/includes/10_antiddos_nat_prerouting.nft"
 }
