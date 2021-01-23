@@ -1,0 +1,44 @@
+#!/usr/sbin/nft -f
+
+# https://blog.samuel.domains/blog/security/nftables-hardening-rules-and-good-practices
+
+table netdev antiddos {}
+table ip antiddos {}
+table ip6 antiddos {}
+
+flush table netdev antiddos
+flush table ip antiddos
+flush table ip6 antiddos
+
+table netdev antiddos {
+
+	include "/etc/nftables/include/antiddos_ingress/*.nft"
+
+	chain ingress {
+		# Drop fragmented packets
+		ip frag-off & 0x1fff != 0 counter drop
+
+		# Drop bogons
+		ip saddr $bogons_v4 counter drop
+#		ip6 saddr $bogons_v6 counter drop
+
+		# Drop TCP XMAS
+		tcp flags & (fin|syn|rst|psh|ack|urg) == fin|syn|rst|psh|ack|urg counter drop
+
+		# Drop TCP NULL
+		tcp flags & (fin|syn|rst|psh|ack|urg) == 0x0 counter drop
+
+		# Drop TCP MSS
+		tcp flags syn tcp option maxseg size 1-536 counter drop
+	}
+}
+
+table ip antiddos {
+
+	include "/etc/nftables/include/10_antiddos_nat_prerouting.nft"
+}
+
+table ip6 antiddos {
+
+	include "/etc/nftables/include/10_antiddos_nat_prerouting.nft"
+}

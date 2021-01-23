@@ -1,0 +1,14 @@
+#!/usr/sbin/nft -f
+
+table inet ratelimit {}
+
+flush table inet ratelimit
+
+table inet ratelimit {
+
+	chain prerouting {
+		type filter hook prerouting priority -170; policy accept;
+
+		tcp dport 22 ct state new limit rate 15/minute accept comment "Rate limit SSH"
+	}
+}

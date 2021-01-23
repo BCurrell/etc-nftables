@@ -1,0 +1,6 @@
+chain ingress_${IFACE} {
+	# Priority needs to be before everything, earliest NF_IP_PRI_CONNTRACK_DEFRAG (-400)
+	type filter hook ingress device ${IFACE} priority -500; policy accept;
+
+	jump ingress
+}
