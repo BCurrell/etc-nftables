@@ -12,7 +12,7 @@ flush table ip6 antiddos
 
 table netdev antiddos {
 
-	include "/etc/nftables/include/antiddos_ingress/*.nft"
+	include "/etc/nftables/includes/antiddos_ingress/*.nft"
 
 	chain ingress {
 		# Drop fragmented packets
@@ -35,10 +35,10 @@ table netdev antiddos {
 
 table ip antiddos {
 
-	include "/etc/nftables/include/10_antiddos_nat_prerouting.nft"
+	include "/etc/nftables/includes/10_antiddos_nat_prerouting.nft"
 }
 
 table ip6 antiddos {
 
-	include "/etc/nftables/include/10_antiddos_nat_prerouting.nft"
+	include "/etc/nftables/includes/10_antiddos_nat_prerouting.nft"
 }
