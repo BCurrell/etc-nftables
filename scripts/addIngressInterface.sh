@@ -18,7 +18,7 @@ do
     if [[ -f "${TARGET}" ]]
     then
         echo "Interface already added: ${IFACE}"
-    elif envsubst < "${TEMPLATE}" > "${TARGET}"
+    elif IFACE="${IFACE}" envsubst < "${TEMPLATE}" > "${TARGET}"
     then
         ((CHANGED=CHANGED+1))
 
