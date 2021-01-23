@@ -15,7 +15,10 @@ for IFACE in "${IFACES[@]}"
 do
     TARGET="/etc/nftables/includes/antiddos_ingress/${IFACE}.nft"
 
-    if [[ -f "${TARGET}" ]]
+    if ! ip link show dev "${IFACE}" &> /dev/null
+    then
+        echo "Invalid interface: ${IFACE}"
+    elif [[ -f "${TARGET}" ]]
     then
         echo "Interface already added: ${IFACE}"
     elif IFACE="${IFACE}" envsubst < "${TEMPLATE}" > "${TARGET}"
