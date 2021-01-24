@@ -8,7 +8,11 @@ flush table ip6 ratelimit
 
 table ip ratelimit {
 
-	include "/etc/nftables/includes/30_ratelimit_set_blacklist.nft"
+	set blacklist {
+	    type ipv4_addr
+	    flags dynamic
+	    timeout 60m
+	}
 
 	chain prerouting {
 		type filter hook prerouting priority -170; policy accept;
@@ -20,7 +24,11 @@ table ip ratelimit {
 
 table ip6 ratelimit {
 
-	include "/etc/nftables/includes/30_ratelimit_set_blacklist.nft"
+	set blacklist {
+	    type ipv6_addr
+	    flags dynamic
+	    timeout 60m
+	}
 
 	chain prerouting {
 		type filter hook prerouting priority -170; policy accept;
