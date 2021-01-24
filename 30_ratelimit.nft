@@ -8,7 +8,7 @@ flush table ip6 ratelimit
 
 table ip ratelimit {
 
-	include "/etc/nftables/include/30_ratelimit_set_blacklist.nft"
+	include "/etc/nftables/includes/30_ratelimit_set_blacklist.nft"
 
 	chain prerouting {
 		type filter hook prerouting priority -170; policy accept;
@@ -20,7 +20,7 @@ table ip ratelimit {
 
 table ip6 ratelimit {
 
-	include "/etc/nftables/include/30_ratelimit_set_blacklist.nft"
+	include "/etc/nftables/includes/30_ratelimit_set_blacklist.nft"
 
 	chain prerouting {
 		type filter hook prerouting priority -170; policy accept;
