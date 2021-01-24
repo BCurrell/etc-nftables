@@ -1,0 +1,5 @@
+set blacklist {
+    typeof ip saddr
+    flags dynamic
+    timeout 60m
+}

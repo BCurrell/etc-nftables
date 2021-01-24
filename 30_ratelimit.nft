@@ -1,14 +1,31 @@
 #!/usr/sbin/nft -f
 
-table inet ratelimit {}
+table ip ratelimit {}
+table ip6 ratelimit {}
 
-flush table inet ratelimit
+flush table ip ratelimit
+flush table ip6 ratelimit
 
-table inet ratelimit {
+table ip ratelimit {
+
+	include "/etc/nftables/include/30_ratelimit_set_blacklist.nft"
 
 	chain prerouting {
 		type filter hook prerouting priority -170; policy accept;
 
-		tcp dport 22 ct state new limit rate 15/minute accept comment "Rate limit SSH"
+		tcp dport 22 ct state new,untracked add @blacklist { ip saddr limit rate 15/minute } accept comment "Rate limit SSH"
+		meta l4proto icmp add @blacklist { ip saddr limit rate 2/second } accept comment "Rate limit ICMPv4"
+	}
+}
+
+table ip6 ratelimit {
+
+	include "/etc/nftables/include/30_ratelimit_set_blacklist.nft"
+
+	chain prerouting {
+		type filter hook prerouting priority -170; policy accept;
+
+		tcp dport 22 ct state new,untracked add @blacklist { ip6 saddr limit rate 15/minute } accept comment "Rate limit SSH"
+		meta l4proto icmpv6 add @blacklist { ip6 saddr limit rate 2/second } accept comment "Rate limit ICMPv6"
 	}
 }
