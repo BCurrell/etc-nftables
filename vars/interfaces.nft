@@ -1,1 +1,7 @@
 #!/usr/sbin/nft -f
+
+define iface_lan_v4 - {  }
+define iface_lan_v6 - {  }
+
+define iface_wan_v4 - {  }
+define iface_wan_v6 - {  }

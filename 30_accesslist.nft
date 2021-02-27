@@ -13,11 +13,13 @@ table inet accesslist {
 
 		meta l4proto {icmp, ipv6-icmp} accept comment "Accept ICMP"
 
-		ct state established,related accept comment "Accept traffic originated locally"
+		ct state established,related accept comment "Accept traffic originated from FW"
 	}
 
 	chain forward {
 		type filter hook forward priority 0; policy drop;
+
+		ct state established,related accept comment "Accept traffic originated from LAN"
 	}
 
 	chain output {
