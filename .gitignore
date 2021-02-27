@@ -6,7 +6,7 @@
 !/README.md
 
 !/.subvol-ext/
-!/.subvol-ext/nftables.conf
+!/.subvol-ext/**
 
 !/includes/
 !/includes/*.nft
