@@ -3,7 +3,7 @@
 # Full List
 # https://www.team-cymru.org/Services/Bogons/fullbogons-ipv4.txt
 # Short List
-# https://team-cymru.com/community-services/bogon-reference/bogon-bit-notation/
+# https://www.team-cymru.org/Services/Bogons/bogon-bn-nonagg.txt
 
 define bogons_v4 = { \
 	0.0.0.0/8, \
